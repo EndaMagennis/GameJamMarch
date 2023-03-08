@@ -13,7 +13,7 @@ public class Idle : State
 
     public override void Enter()
     {
-        anim.SetTrigger("isIlde");
+        anim.SetTrigger("isIdle");
         base.Enter();
     }
 

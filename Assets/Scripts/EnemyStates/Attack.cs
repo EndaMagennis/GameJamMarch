@@ -15,6 +15,7 @@ public class Attack : State
     public override void Enter()
     {
         anim.SetTrigger("isAttacking");
+        GameEnvironment.Singleton.ModifyHealth(-25);
         base.Enter();
     }
 

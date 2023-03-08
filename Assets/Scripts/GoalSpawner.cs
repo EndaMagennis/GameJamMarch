@@ -1,3 +1,4 @@
+using Cinemachine.Utility;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,14 +10,10 @@ public class GoalSpawner : MonoBehaviour
     float ZBound = 30f;
     public GameObject mapfloor;
 
-    public AudioClip ping;
-    public AudioSource gaolSound;
-    ThirdPersonController tpc;
     // Start is called before the first frame update
     void Start()
     {
-        tpc = GameObject.Find("Player").GetComponentInChildren<ThirdPersonController>();
-        InvokeRepeating("CreateEnemy", 5.0f, 15.0f);
+        InvokeRepeating("CreateEnemy", 10.0f, 15.0f);
     }
 
     // Update is called once per frame
@@ -27,8 +24,27 @@ public class GoalSpawner : MonoBehaviour
 
     void CreateEnemy()
     {
-        Instantiate(goalPrefab, new Vector3(Random.Range(XBound, -XBound), 1.5f, Random.Range(ZBound, -ZBound)), goalPrefab.transform.rotation);
-        gaolSound.PlayOneShot(ping);
-        tpc.DisplayMessage("New Coin on the Map");
+        Vector3 spawnPos = new Vector3(Random.Range(XBound, -XBound), 1.5f, Random.Range(ZBound, -ZBound));
+        if (IsFreeSpace(spawnPos))
+        {
+            Instantiate(goalPrefab, spawnPos, goalPrefab.transform.rotation);
+            AudioHandler.Instance.masterAudio.PlayOneShot(AudioHandler.Instance.coinPing);
+            UIHandler.Instance.DisplayMessage("New Coin on the Map");
+        }
+        else
+        {
+            CreateEnemy();
+        }
+        
+    }
+
+    bool IsFreeSpace(Vector3 point)
+    {
+        var hitCollider = Physics.OverlapSphere(point, 1);
+        if(hitCollider.Length > 0)
+        {
+            return false;
+        }
+        return true;
     }
 }

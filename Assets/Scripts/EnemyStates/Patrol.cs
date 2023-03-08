@@ -6,7 +6,6 @@ using UnityEngine.AI;
 public class Patrol : State
 {
     int currentIndex = -1;
-    
 
     public Patrol(GameObject _npc, NavMeshAgent _agent, Animator _anim, Transform _player)
         : base(_npc, _agent, _anim, _player)

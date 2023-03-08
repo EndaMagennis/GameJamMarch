@@ -10,6 +10,7 @@ TagManager:
   - Checkpoints
   - Goal
   - Enemy
+  - DeathCollider
   layers:
   - Default
   - TransparentFX

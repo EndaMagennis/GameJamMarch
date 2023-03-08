@@ -5,17 +5,12 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject enemyPrefab;
-    Vector3 SpawnPosition;
     float XBound = 15f;
     float ZBound = 15f;
     public GameObject mapfloor;
-    public AudioSource enemySound;
-    public AudioClip enemyClip;
-    ThirdPersonController tpc;
     // Start is called before the first frame update
     void Start()
     {
-        tpc = GameObject.Find("Player").GetComponentInChildren<ThirdPersonController>();
         Invoke("CreateEnemy", 5.0f);
     }
 
@@ -27,9 +22,28 @@ public class EnemySpawner : MonoBehaviour
     
     public void CreateEnemy()
     {
-        Instantiate(enemyPrefab, new Vector3(Random.Range(XBound, -XBound), 0, Random.Range(ZBound, -ZBound)), enemyPrefab.transform.rotation);
-        enemySound.PlayOneShot(enemyClip);
-        tpc.DisplayMessage("New Enemy on the Map");
+        Vector3 spawnPos = new Vector3(Random.Range(XBound, -XBound), 1.5f, Random.Range(ZBound, -ZBound));
+        if (IsFreeSpace(spawnPos))
+        {
+            Instantiate(enemyPrefab, spawnPos, enemyPrefab.transform.rotation);
+            AudioHandler.Instance.masterAudio.PlayOneShot(AudioHandler.Instance.enemySpawn);
+            UIHandler.Instance.DisplayMessage("New Enemy on the Map");
+        }
+        else
+        {
+            CreateEnemy();
+        }
     }
-   
+        
+
+    bool IsFreeSpace(Vector3 point)
+    {
+        var hitCollider = Physics.OverlapSphere(point, 1);
+        if (hitCollider.Length > 0)
+        {
+            return false;
+        }
+        return true;
+    }
+
 }
